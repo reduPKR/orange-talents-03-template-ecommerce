@@ -1,12 +1,13 @@
 package com.mercado.livre.usuario;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.*;
 
 public class UsuarioRequest {
     @NotNull
     @NotBlank
+    @Email
     private String login;
     @NotNull
     @NotBlank
@@ -27,6 +28,6 @@ public class UsuarioRequest {
     }
 
     private String gerarHash() {
-        return new BCryptPasswordEncoder().encode(senha);
+        return senha;//new BCryptPasswordEncoder().encode(senha);
     }
 }
