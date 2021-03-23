@@ -1,5 +1,6 @@
 package com.mercado.livre.usuario;
 
+import com.mercado.livre.validador.UniqueValue;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.validation.constraints.*;
@@ -8,6 +9,7 @@ public class UsuarioRequest {
     @NotNull
     @NotBlank
     @Email
+    @UniqueValue(domainClass = Usuario.class, fieldName = "login")
     private String login;
     @NotNull
     @NotBlank
