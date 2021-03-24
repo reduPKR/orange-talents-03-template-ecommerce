@@ -13,6 +13,14 @@ public class Categoria {
     @ManyToOne
     private Categoria categoriaMae;
 
+    public Categoria() {
+    }
+
+    public Categoria(String nome, Categoria categoriaMae) {
+        this.nome = nome;
+        this.categoriaMae = categoriaMae;
+    }
+
     public long getId() {
         return id;
     }
