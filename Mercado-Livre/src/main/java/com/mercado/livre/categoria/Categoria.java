@@ -1,7 +1,5 @@
 package com.mercado.livre.categoria;
 
-import com.mercado.livre.validador.UniqueValue;
-
 import javax.persistence.*;
 
 @Entity
@@ -9,11 +7,10 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column(nullable = false)
-    @UniqueValue(domainClass = Categoria.class, fieldName = "nome")
+    @Column(nullable = false, unique = true)
     private String nome;
-    @OneToMany
-    @Column(nullable = true)
+
+    @ManyToOne
     private Categoria categoriaMae;
 
     public long getId() {
