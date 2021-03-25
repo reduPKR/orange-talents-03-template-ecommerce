@@ -20,12 +20,12 @@ public class Produto {
     @Column(nullable = false)
     @Size(min = 0)
     private double estoque;
-    @OneToMany
-    private List<Caracteristica> caracteristicas;
     @Column(nullable = false)
     @Size(max = 1000)
     private String descricao;
-    @Column(nullable = false)
+    @OneToMany
+    private List<Caracteristica> caracteristicas;
+    @ManyToOne
     private Categoria categoria;
 
     public long getId() {
