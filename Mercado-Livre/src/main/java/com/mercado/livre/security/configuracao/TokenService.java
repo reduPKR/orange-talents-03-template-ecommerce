@@ -1,4 +1,4 @@
-package com.mercado.livre.security;
+package com.mercado.livre.security.configuracao;
 
 import com.mercado.livre.usuario.Usuario;
 import io.jsonwebtoken.Claims;
