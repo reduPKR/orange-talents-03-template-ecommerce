@@ -8,6 +8,7 @@ import com.mercado.livre.produto.imagens.UploaderFake;
 import com.mercado.livre.usuario.Usuario;
 import com.mercado.livre.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -53,22 +54,40 @@ public class ProdutoContoller {
             }
         }
 
-        List<ProdutoErroResponse> erros = result.getFieldErrors()
+        return ResponseEntity.badRequest().body(listarErros(result));
+    }
+
+    @PostMapping("/{id}/imagens/{email}")
+    @Transactional
+    public ResponseEntity<?> cadastrarImegem(@Valid ImagensRequest imagens, @PathVariable("id") long id, @PathVariable("email") String login, BindingResult result){
+        if(!result.hasErrors()){
+            Optional<Usuario> dono = usuarioRepository.findByLogin(login);
+
+            if(dono.isPresent()){
+                Produto produto = produtoRepository.findById(id).get();
+                if(produto.getDono().getId() == dono.get().getId()){
+                    /*Vai simular o upload de imagem para um sistema externo*/
+                    Set<String> links = uploaderFake.send(imagens.getImagens());
+                    produto.associarImagens(links);
+                    produtoRepository.save(produto);
+
+                    return ResponseEntity.ok().build();
+                }else{
+                    result.addError(new FieldError("Produtos", "cadastro de imagem", "Usuario não é o dono do produto."));
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(listarErros(result));
+                }
+            }else{
+                result.addError(new FieldError("Produtos", "cadastro de imagem", "Dono do produto nao encontrado."));
+            }
+        }
+
+        return ResponseEntity.badRequest().body(listarErros(result));
+    }
+
+    private List<ProdutoErroResponse> listarErros(BindingResult result) {
+        return result.getFieldErrors()
                 .stream()
                 .map(ProdutoErroResponse::new)
                 .collect(Collectors.toList());
-
-        return ResponseEntity.badRequest().body(erros);
-    }
-
-    @PostMapping("/{id}/imagens")
-    @Transactional
-    public void cadastrarImegem(@Valid ImagensRequest imagens, @PathVariable("id") long id){
-        /*Vai simular o upload de imagem para um sistema externo*/
-        Set<String> links = uploaderFake.send(imagens.getImagens());
-        Produto produto = produtoRepository.findById(id).get();
-        produto.associarImagens(links);
-
-        produtoRepository.save(produto);
     }
 }
