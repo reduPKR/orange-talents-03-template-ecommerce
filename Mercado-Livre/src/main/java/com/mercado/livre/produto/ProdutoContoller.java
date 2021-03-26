@@ -4,6 +4,7 @@ import com.mercado.livre.categoria.CategoriaRepository;
 import com.mercado.livre.produto.caracteristica.Caracteristica;
 import com.mercado.livre.produto.caracteristica.CaracteristicaRepository;
 import com.mercado.livre.produto.imagens.ImagensRequest;
+import com.mercado.livre.produto.imagens.UploaderFake;
 import com.mercado.livre.usuario.Usuario;
 import com.mercado.livre.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
@@ -36,6 +38,9 @@ public class ProdutoContoller {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private UploaderFake uploaderFake;
 
     @PostMapping
     @Transactional
@@ -69,7 +74,10 @@ public class ProdutoContoller {
     @Transactional
     public void cadastrarImegem(@Valid ImagensRequest imagens, @PathVariable("id") long id){
         /*Vai simular o upload de imagem para um sistema externo*/
-        List<String> links = uploaderFake.send(imagens.getImagens());
-        
+        Set<String> links = uploaderFake.send(imagens.getImagens());
+        Produto produto = produtoRepository.findById(id).get();
+        produto.associarImagens(links);
+
+        produtoRepository.save(produto);
     }
 }

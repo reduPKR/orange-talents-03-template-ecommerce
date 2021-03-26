@@ -3,12 +3,16 @@ package com.mercado.livre.produto;
 import com.mercado.livre.categoria.Categoria;
 import com.mercado.livre.produto.caracteristica.Caracteristica;
 import com.mercado.livre.produto.caracteristica.CaracteristicaRepository;
+import com.mercado.livre.produto.imagens.ImagemProduto;
 import com.mercado.livre.usuario.Usuario;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Produto {
@@ -30,6 +34,8 @@ public class Produto {
     private Categoria categoria;
     @ManyToOne
     private Usuario dono;
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+    private Set<ImagemProduto> imagens = new HashSet<>();
 
     public Produto() {
     }
@@ -104,5 +110,13 @@ public class Produto {
             }
         }
         return retorno;
+    }
+
+    public void associarImagens(Set<String> links){
+        Set<ImagemProduto> novasImagens = links.stream()
+                .map(link -> new ImagemProduto(this, link))
+                .collect(Collectors.toSet());
+
+        this.imagens.addAll(novasImagens);
     }
 }
