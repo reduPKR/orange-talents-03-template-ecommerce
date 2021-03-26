@@ -95,7 +95,7 @@ public class Produto {
         return caracteristicas;
     }
 
-    public boolean validarCaracteristica(CaracteristicaRepository caracteristicaRepository) {
+    public boolean validarCaracteristica() {
         boolean retorno = true;
 
         for (Caracteristica item : caracteristicas) {
