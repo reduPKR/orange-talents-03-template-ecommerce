@@ -4,6 +4,8 @@ import com.mercado.livre.categoria.Categoria;
 import com.mercado.livre.categoria.CategoriaRepository;
 import com.mercado.livre.produto.caracteristica.Caracteristica;
 import com.mercado.livre.produto.caracteristica.CaracteristicaRequest;
+import com.mercado.livre.usuario.Usuario;
+import com.mercado.livre.usuario.UsuarioRepository;
 import org.springframework.validation.BindingResult;
 
 import javax.persistence.ManyToOne;
@@ -18,6 +20,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ProdutoRequest {
+    @NotNull
+    @NotEmpty
+    private String login;
     @NotNull
     @NotEmpty
     private String nome;
@@ -37,6 +42,10 @@ public class ProdutoRequest {
     @OneToMany
     @Size(min = 3)
     private List<CaracteristicaRequest> caracteristicas;
+
+    public String getLogin() {
+        return login;
+    }
 
     public String getNome() {
         return nome;
@@ -62,17 +71,26 @@ public class ProdutoRequest {
         return caracteristicas;
     }
 
-    public Produto converter(CategoriaRepository categoriaRepository) {
+    public Produto converter(CategoriaRepository categoriaRepository, UsuarioRepository usuarioRepository) {
         Optional<Categoria> categoria = categoriaRepository.findById(this.categoria);
-        if(categoria.isPresent())
-            return  new Produto(
-                    nome,
-                    preco,
-                    estoque,
-                    descricao,
-                    categoria.get(),
-                    caracteristicas.stream().map(Caracteristica::new).collect(Collectors.toList())
-            );
+        if(categoria.isPresent()){
+            Optional<Usuario> dono = usuarioRepository.findByLogin(login);
+
+            if(dono.isPresent()){
+                return  new Produto(
+                        dono.get(),
+                        nome,
+                        preco,
+                        estoque,
+                        descricao,
+                        categoria.get(),
+                        caracteristicas.stream().map(Caracteristica::new).collect(Collectors.toList())
+                );
+            }
+
+            throw new RuntimeException("Usuario não encontrado");
+        }
+
         throw new RuntimeException("Categoria não cadastrada");
     }
 }

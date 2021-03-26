@@ -3,6 +3,8 @@ package com.mercado.livre.produto;
 import com.mercado.livre.categoria.CategoriaRepository;
 import com.mercado.livre.produto.caracteristica.Caracteristica;
 import com.mercado.livre.produto.caracteristica.CaracteristicaRepository;
+import com.mercado.livre.usuario.Usuario;
+import com.mercado.livre.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,10 +31,13 @@ public class ProdutoContoller {
     @Autowired
     private CaracteristicaRepository caracteristicaRepository;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     @PostMapping
     public ResponseEntity<?> cadastrar(@RequestBody @Valid ProdutoRequest produtoRequest, BindingResult result){
         if(!result.hasErrors()){
-            Produto produto = produtoRequest.converter(categoriaRepository);
+            Produto produto = produtoRequest.converter(categoriaRepository, usuarioRepository);
 
             salvarCaracteristicas(produto.getCaracteristicas());
             if(produto.validarCaracteristica(caracteristicaRepository)){

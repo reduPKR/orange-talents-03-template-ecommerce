@@ -3,6 +3,7 @@ package com.mercado.livre.produto;
 import com.mercado.livre.categoria.Categoria;
 import com.mercado.livre.produto.caracteristica.Caracteristica;
 import com.mercado.livre.produto.caracteristica.CaracteristicaRepository;
+import com.mercado.livre.usuario.Usuario;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -27,17 +28,24 @@ public class Produto {
     private List<Caracteristica> caracteristicas;
     @ManyToOne
     private Categoria categoria;
+    @ManyToOne
+    private Usuario dono;
 
     public Produto() {
     }
 
-    public Produto(String nome, @Size(min = 0) double preco, @Size(min = 0) double estoque, @Size(max = 1000) String descricao, Categoria categoria, List<Caracteristica> caracteristicas) {
+    public Produto(Usuario dono, String nome, @Size(min = 0) double preco, @Size(min = 0) double estoque, @Size(max = 1000) String descricao, Categoria categoria, List<Caracteristica> caracteristicas) {
+        this.dono = dono;
         this.nome = nome;
         this.preco = preco;
         this.estoque = estoque;
         this.descricao = descricao;
         this.caracteristicas = caracteristicas;
         this.categoria = categoria;
+    }
+
+    public Usuario getDono() {
+        return dono;
     }
 
     public long getId() {
