@@ -31,4 +31,8 @@ public class Caracteristica {
     public String getDescricao() {
         return descricao;
     }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

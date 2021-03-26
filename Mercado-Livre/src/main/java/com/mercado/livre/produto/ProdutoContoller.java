@@ -3,19 +3,18 @@ package com.mercado.livre.produto;
 import com.mercado.livre.categoria.CategoriaRepository;
 import com.mercado.livre.produto.caracteristica.Caracteristica;
 import com.mercado.livre.produto.caracteristica.CaracteristicaRepository;
-import com.mercado.livre.produto.caracteristica.CaracteristicaRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -35,7 +34,8 @@ public class ProdutoContoller {
         if(!result.hasErrors()){
             Produto produto = produtoRequest.converter(categoriaRepository);
 
-            if(salvarCaracteristicas(produto.getCaracteristicas())){
+            salvarCaracteristicas(produto.getCaracteristicas());
+            if(produto.validarCaracteristica(caracteristicaRepository)){
                 produtoRepository.save(produto);
 
                 if(produto.getId() != 0){
@@ -48,25 +48,26 @@ public class ProdutoContoller {
             }
         }
 
-        List<ErroResponse> erros = result.getFieldErrors()
+        List<ProdutoErroResponse> erros = result.getFieldErrors()
                 .stream()
-                .map(ErroResponse::new)
+                .map(ProdutoErroResponse::new)
                 .collect(Collectors.toList());
 
         return ResponseEntity.badRequest().body(erros);
 
     }
 
-    private boolean salvarCaracteristicas(List<Caracteristica> caracteristicas) {
-        boolean retorno = true;
-
+    private List<Caracteristica> salvarCaracteristicas(List<Caracteristica> caracteristicas) {
         for(Caracteristica item: caracteristicas ) {
-            caracteristicaRepository.save(item);
-            if(item.getId() == 0)
-                retorno = false;
+            Optional<Caracteristica> busca = caracteristicaRepository
+                    .findByNomeAndDescricao(item.getNome(), item.getDescricao());
+
+            if(busca.isEmpty()){
+                caracteristicaRepository.save(item);
+            }
         };
 
-        return retorno;
+        return caracteristicas;
     }
 
 }

@@ -2,6 +2,7 @@ package com.mercado.livre.produto;
 
 import com.mercado.livre.categoria.Categoria;
 import com.mercado.livre.produto.caracteristica.Caracteristica;
+import com.mercado.livre.produto.caracteristica.CaracteristicaRepository;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -16,10 +17,8 @@ public class Produto {
     @Column(nullable = false)
     private String nome;
     @Column(nullable = false)
-    @Size(min = 0)
     private double preco;
     @Column(nullable = false)
-    @Size(min = 0)
     private double estoque;
     @Column(nullable = false)
     @Size(max = 1000)
@@ -67,5 +66,24 @@ public class Produto {
 
     public Categoria getCategoria() {
         return categoria;
+    }
+
+    public boolean validarCaracteristica(CaracteristicaRepository caracteristicaRepository) {
+        boolean retorno = true;
+
+        Caracteristica item;
+        for(int i = 0; i < caracteristicas.size(); i++){
+            item = caracteristicas.get(i);
+
+            Optional<Caracteristica> busca = caracteristicaRepository
+                    .findByNomeAndDescricao(item.getNome(), item.getDescricao());
+
+            if(busca.isPresent()){
+                /*Altera o id*/
+                caracteristicas.get(i).setId(busca.get().getId());
+            }else
+                retorno = false;
+        }
+        return retorno;
     }
 }

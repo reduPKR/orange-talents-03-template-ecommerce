@@ -2,11 +2,11 @@ package com.mercado.livre.produto;
 
 import org.springframework.validation.FieldError;
 
-public class ErroResponse {
+public class ProdutoErroResponse {
     private String campo;
     private String erro;
 
-    public ErroResponse(FieldError fieldError) {
+    public ProdutoErroResponse(FieldError fieldError) {
         this.campo = fieldError.getField();
         this.erro = fieldError.getDefaultMessage();
     }
