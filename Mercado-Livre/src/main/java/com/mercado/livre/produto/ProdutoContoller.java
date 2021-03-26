@@ -34,9 +34,6 @@ public class ProdutoContoller {
     private CategoriaRepository categoriaRepository;
 
     @Autowired
-    private CaracteristicaRepository caracteristicaRepository;
-
-    @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Autowired
@@ -48,17 +45,11 @@ public class ProdutoContoller {
         if(!result.hasErrors()){
             Produto produto = produtoRequest.converter(categoriaRepository, usuarioRepository);
 
-            produto.salvarCaracteristicas(caracteristicaRepository);
-            if(produto.validarCaracteristica()){
-                produtoRepository.save(produto);
-
-                if(produto.getId() != 0){
-                    return ResponseEntity.ok().build();
-                }else{
-                    result.addError(new FieldError("Produtos", "Produto", "Ocorreu algum erro ao adicionar o produto."));
-                }
+            produtoRepository.save(produto);
+            if(produto.getId() != 0){
+                return ResponseEntity.ok().build();
             }else{
-                result.addError(new FieldError("Produtos", "caracteristicas", "Ocorreu algum erro ao adicionar as caracteristicas."));
+                result.addError(new FieldError("Produtos", "Produto", "Ocorreu algum erro ao adicionar o produto."));
             }
         }
 
