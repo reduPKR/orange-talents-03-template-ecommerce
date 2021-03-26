@@ -1,13 +1,21 @@
 package com.mercado.livre.produto;
 
+import com.mercado.livre.categoria.Categoria;
+import com.mercado.livre.categoria.CategoriaRepository;
 import com.mercado.livre.produto.caracteristica.Caracteristica;
+import com.mercado.livre.produto.caracteristica.CaracteristicaRequest;
+import org.springframework.validation.BindingResult;
 
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ProdutoRequest {
     @NotNull
@@ -18,16 +26,17 @@ public class ProdutoRequest {
     private double preco;
     @NotNull
     @Min(0)
-    private double estoque;
+    private int estoque;
     @NotNull
     @NotEmpty
     @Size(max = 1000)
     private String descricao;
     @NotNull
-    private Long categoria_id;
+    @ManyToOne
+    private long categoria;//Verificar por que quando coloca id da erro
     @OneToMany
     @Size(min = 3)
-    private List<Caracteristica> caracteristicas;
+    private List<CaracteristicaRequest> caracteristicas;
 
     public String getNome() {
         return nome;
@@ -37,7 +46,7 @@ public class ProdutoRequest {
         return preco;
     }
 
-    public double getEstoque() {
+    public int getEstoque() {
         return estoque;
     }
 
@@ -45,11 +54,25 @@ public class ProdutoRequest {
         return descricao;
     }
 
-    public Long getCategoria() {
-        return categoria_id;
+    public long getCategoria() {
+        return categoria;
     }
 
-    public List<Caracteristica> getCaracteristicas() {
+    public List<CaracteristicaRequest> getCaracteristicas() {
         return caracteristicas;
+    }
+
+    public Produto converter(CategoriaRepository categoriaRepository) {
+        Optional<Categoria> categoria = categoriaRepository.findById(this.categoria);
+        if(categoria.isPresent())
+            return  new Produto(
+                    nome,
+                    preco,
+                    estoque,
+                    descricao,
+                    categoria.get(),
+                    caracteristicas.stream().map(Caracteristica::new).collect(Collectors.toList())
+            );
+        throw new RuntimeException("Categoria não cadastrada");
     }
 }

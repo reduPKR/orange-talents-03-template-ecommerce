@@ -6,6 +6,7 @@ import com.mercado.livre.produto.caracteristica.Caracteristica;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 public class Produto {
@@ -27,6 +28,18 @@ public class Produto {
     private List<Caracteristica> caracteristicas;
     @ManyToOne
     private Categoria categoria;
+
+    public Produto() {
+    }
+
+    public Produto(String nome, @Size(min = 0) double preco, @Size(min = 0) double estoque, @Size(max = 1000) String descricao, Categoria categoria, List<Caracteristica> caracteristicas) {
+        this.nome = nome;
+        this.preco = preco;
+        this.estoque = estoque;
+        this.descricao = descricao;
+        this.caracteristicas = caracteristicas;
+        this.categoria = categoria;
+    }
 
     public long getId() {
         return id;

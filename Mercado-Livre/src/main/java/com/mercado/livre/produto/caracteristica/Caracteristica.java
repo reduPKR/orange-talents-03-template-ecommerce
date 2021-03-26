@@ -12,6 +12,14 @@ public class Caracteristica {
     @Column(nullable = false)
     private String descricao;
 
+    public Caracteristica() {
+    }
+
+    public Caracteristica(CaracteristicaRequest caracteristicaRequest) {
+        this.nome = caracteristicaRequest.getNome();
+        this.descricao = caracteristicaRequest.getDescricao();
+    }
+
     public long getId() {
         return id;
     }
