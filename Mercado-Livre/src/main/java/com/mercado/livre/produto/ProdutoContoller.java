@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -35,11 +36,12 @@ public class ProdutoContoller {
     private UsuarioRepository usuarioRepository;
 
     @PostMapping
+    @Transactional
     public ResponseEntity<?> cadastrar(@RequestBody @Valid ProdutoRequest produtoRequest, BindingResult result){
         if(!result.hasErrors()){
             Produto produto = produtoRequest.converter(categoriaRepository, usuarioRepository);
 
-            salvarCaracteristicas(produto.getCaracteristicas());
+            produto.salvarCaracteristicas(caracteristicaRepository);
             if(produto.validarCaracteristica(caracteristicaRepository)){
                 produtoRepository.save(produto);
 
@@ -61,18 +63,4 @@ public class ProdutoContoller {
         return ResponseEntity.badRequest().body(erros);
 
     }
-
-    private List<Caracteristica> salvarCaracteristicas(List<Caracteristica> caracteristicas) {
-        for(Caracteristica item: caracteristicas ) {
-            Optional<Caracteristica> busca = caracteristicaRepository
-                    .findByNomeAndDescricao(item.getNome(), item.getDescricao());
-
-            if(busca.isEmpty()){
-                caracteristicaRepository.save(item);
-            }
-        };
-
-        return caracteristicas;
-    }
-
 }

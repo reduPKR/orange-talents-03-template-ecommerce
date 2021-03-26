@@ -76,9 +76,7 @@ public class Produto {
         return categoria;
     }
 
-    public boolean validarCaracteristica(CaracteristicaRepository caracteristicaRepository) {
-        boolean retorno = true;
-
+    public List<Caracteristica> salvarCaracteristicas(CaracteristicaRepository caracteristicaRepository) {
         Caracteristica item;
         for(int i = 0; i < caracteristicas.size(); i++){
             item = caracteristicas.get(i);
@@ -86,11 +84,24 @@ public class Produto {
             Optional<Caracteristica> busca = caracteristicaRepository
                     .findByNomeAndDescricao(item.getNome(), item.getDescricao());
 
-            if(busca.isPresent()){
-                /*Altera o id*/
+            if(busca.isEmpty()){
+                caracteristicaRepository.save(item);
+                caracteristicas.get(i).setId(item.getId());
+            }else{
                 caracteristicas.get(i).setId(busca.get().getId());
-            }else
+            }
+        }
+
+        return caracteristicas;
+    }
+
+    public boolean validarCaracteristica(CaracteristicaRepository caracteristicaRepository) {
+        boolean retorno = true;
+
+        for (Caracteristica item : caracteristicas) {
+            if (item.getId() == 0) {
                 retorno = false;
+            }
         }
         return retorno;
     }
