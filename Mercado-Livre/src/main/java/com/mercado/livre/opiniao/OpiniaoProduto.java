@@ -1,4 +1,4 @@
-package com.mercado.livre.produto.opiniao;
+package com.mercado.livre.opiniao;
 
 import com.mercado.livre.produto.Produto;
 import com.mercado.livre.usuario.Usuario;

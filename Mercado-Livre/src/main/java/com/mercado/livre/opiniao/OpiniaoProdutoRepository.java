@@ -1,4 +1,4 @@
-package com.mercado.livre.produto.opiniao;
+package com.mercado.livre.opiniao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

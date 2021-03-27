@@ -1,10 +1,9 @@
-package com.mercado.livre.produto.opiniao;
+package com.mercado.livre.opiniao;
 
 import com.mercado.livre.produto.Produto;
 import com.mercado.livre.usuario.Usuario;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
