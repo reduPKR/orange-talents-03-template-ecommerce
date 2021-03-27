@@ -1,6 +1,8 @@
 package com.mercado.livre.produto;
 
+import com.mercado.livre.opiniao.OpiniaoProduto;
 import com.mercado.livre.opiniao.OpniaoProdutoResponse;
+import com.mercado.livre.perguntas.PerguntaProduto;
 import com.mercado.livre.perguntas.PerguntaProdutoResponse;
 import com.mercado.livre.produto.caracteristica.CaracteristicaResponse;
 
@@ -17,6 +19,9 @@ public class ProdutoDetalhadoResponse {
     private Set<CaracteristicaResponse> caracteristicas;
     private Set<OpniaoProdutoResponse> opinioes;
     private Set<PerguntaProdutoResponse> perguntas;
+
+    public ProdutoDetalhadoResponse(Produto produto, OpiniaoProduto opiniaoProduto, PerguntaProduto perguntaProduto) {
+    }
 
     public String getNome() {
         return nome;

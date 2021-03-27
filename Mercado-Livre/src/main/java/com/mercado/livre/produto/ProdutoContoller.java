@@ -2,6 +2,10 @@ package com.mercado.livre.produto;
 
 import com.mercado.livre.categoria.CategoriaRepository;
 import com.mercado.livre.exception.ErroResponse;
+import com.mercado.livre.opiniao.OpiniaoProduto;
+import com.mercado.livre.opiniao.OpiniaoProdutoRepository;
+import com.mercado.livre.perguntas.PerguntaProduto;
+import com.mercado.livre.perguntas.PerguntaProdutoRepository;
 import com.mercado.livre.produto.imagens.ImagemProduto;
 import com.mercado.livre.produto.imagens.ImagensRequest;
 import com.mercado.livre.produto.imagens.UploaderFake;
@@ -37,6 +41,12 @@ public class ProdutoContoller {
 
     @Autowired
     private UploaderFake uploaderFake;
+
+    @Autowired
+    private OpiniaoProdutoRepository opiniaoProdutoRepository;
+
+    @Autowired
+    private PerguntaProdutoRepository perguntaProdutoRepository;
 
     @PostMapping
     @Transactional
@@ -88,8 +98,21 @@ public class ProdutoContoller {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoDetalhadoResponse> detalhes(@PathVariable long id){
-        Optional<ProdutoDetalhadoResponse> optionalProduto = produtoRepository.findDetailById(id);
+    public ResponseEntity<?> detalhes(@PathVariable long id, BindingResult result){
+        if(!result.hasErrors()){
+            Optional<Produto> optionalProduto = produtoRepository.findById(id);
 
+            if(optionalProduto.isPresent()){
+                Optional<OpiniaoProduto> optionalOpiniao = opiniaoProdutoRepository.findByProduto(optionalProduto.get());
+                Optional<PerguntaProduto> optionalPergunta = perguntaProdutoRepository.findByProduto(optionalProduto.get());
+
+                ProdutoDetalhadoResponse produto = new ProdutoDetalhadoResponse(optionalProduto.get(), optionalOpiniao.get(), optionalPergunta.get());
+                return ResponseEntity.ok().body(produto);
+            }else
+                result.addError(new FieldError("Produto", "Não encontrado", "Não conseguimos localizar o produto seleciondado"));
+
+        }
+
+        return ResponseEntity.badRequest().body(listarErros(result));
     }
 }
