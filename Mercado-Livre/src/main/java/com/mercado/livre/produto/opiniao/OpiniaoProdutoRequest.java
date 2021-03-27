@@ -1,5 +1,7 @@
 package com.mercado.livre.produto.opiniao;
 
+import com.mercado.livre.produto.Produto;
+import com.mercado.livre.usuario.Usuario;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.ManyToOne;
@@ -16,12 +18,6 @@ public class OpiniaoProdutoRequest {
     @NotNull
     @Length(max = 500)
     private String descricao;
-    @NotNull
-    @ManyToOne
-    private long idUsuario;
-    @NotNull
-    @ManyToOne
-    private long idProduto;
 
     public short getNota() {
         return nota;
@@ -35,11 +31,7 @@ public class OpiniaoProdutoRequest {
         return descricao;
     }
 
-    public long getIdUsuario() {
-        return idUsuario;
-    }
-
-    public long getIdProduto() {
-        return idProduto;
+    public OpiniaoProduto converter(Usuario usuario, Produto produto) {
+        return new OpiniaoProduto(nota, titulo, descricao, usuario, produto);
     }
 }

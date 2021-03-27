@@ -1,8 +1,7 @@
 package com.mercado.livre.produto;
 
 import com.mercado.livre.categoria.CategoriaRepository;
-import com.mercado.livre.produto.caracteristica.Caracteristica;
-import com.mercado.livre.produto.caracteristica.CaracteristicaRepository;
+import com.mercado.livre.exception.ErroResponse;
 import com.mercado.livre.produto.imagens.ImagensRequest;
 import com.mercado.livre.produto.imagens.UploaderFake;
 import com.mercado.livre.usuario.Usuario;
@@ -84,10 +83,10 @@ public class ProdutoContoller {
         return ResponseEntity.badRequest().body(listarErros(result));
     }
 
-    private List<ProdutoErroResponse> listarErros(BindingResult result) {
+    private List<ErroResponse> listarErros(BindingResult result) {
         return result.getFieldErrors()
                 .stream()
-                .map(ProdutoErroResponse::new)
+                .map(ErroResponse::new)
                 .collect(Collectors.toList());
     }
 }

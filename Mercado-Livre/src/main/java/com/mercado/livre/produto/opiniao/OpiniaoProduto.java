@@ -23,11 +23,22 @@ public class OpiniaoProduto {
     @Length(max = 500)
     private String descricao;
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Usuario usuario;
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Produto produto;
+
+    public OpiniaoProduto() {
+    }
+
+    public OpiniaoProduto(@Min(1) @Max(5) short nota, String titulo, @Length(max = 500) String descricao, @NotNull Usuario usuario, @NotNull Produto produto) {
+        this.nota = nota;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.usuario = usuario;
+        this.produto = produto;
+    }
 
     public long getId() {
         return id;
