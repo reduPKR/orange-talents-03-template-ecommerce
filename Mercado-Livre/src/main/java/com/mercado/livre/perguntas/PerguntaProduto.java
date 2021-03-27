@@ -48,4 +48,11 @@ public class PerguntaProduto {
     public Usuario getUsuario() {
         return usuario;
     }
+
+    @Override
+    public String toString() {
+        return "titulo=" + titulo + "\n" +
+                "produto=" + produto.getNome()+"\n" +
+                "criacao=" + criacao ;
+    }
 }

@@ -1,6 +1,7 @@
 package com.mercado.livre.perguntas;
 
 import com.mercado.livre.exception.ErroResponse;
+import com.mercado.livre.perguntas.email.EmailFake;
 import com.mercado.livre.produto.Produto;
 import com.mercado.livre.produto.ProdutoRepository;
 import com.mercado.livre.usuario.Usuario;
@@ -29,6 +30,8 @@ public class PerguntaProdutoController {
     @Autowired
     private PerguntaProdutoRepository perguntaProdutoRepository;
 
+    @Autowired
+    private EmailFake emailFake;
 
     @PostMapping("/{id}")
     public ResponseEntity<?> cadastrar(@RequestBody @Valid PerguntaProdutoRequest perguntaRequest,
