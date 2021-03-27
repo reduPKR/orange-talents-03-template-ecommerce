@@ -51,6 +51,7 @@ public class PerguntaProdutoController {
                     String remetente = usuario.getUsername();
 
                     emailFake.send(destino, remetente, pergunta);
+                    return ResponseEntity.ok().build();
                 }else
                     result.addError(new FieldError("Pergunta", "Pergunta sobre o produto","Erro ao salvar os dados"));
             }else
