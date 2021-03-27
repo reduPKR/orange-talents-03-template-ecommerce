@@ -98,21 +98,17 @@ public class ProdutoContoller {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> detalhes(@PathVariable long id, BindingResult result){
-        if(!result.hasErrors()){
-            Optional<Produto> optionalProduto = produtoRepository.findById(id);
+    public ResponseEntity<?> detalhes(@PathVariable long id){
+        Optional<Produto> optionalProduto = produtoRepository.findById(id);
 
-            if(optionalProduto.isPresent()){
-                Optional<OpiniaoProduto> optionalOpiniao = opiniaoProdutoRepository.findByProduto(optionalProduto.get());
-                Optional<PerguntaProduto> optionalPergunta = perguntaProdutoRepository.findByProduto(optionalProduto.get());
+        if(optionalProduto.isPresent()){
+            Optional<List<OpiniaoProduto>> optionalOpiniao = opiniaoProdutoRepository.findByProduto(optionalProduto.get());
+            Optional<List<PerguntaProduto>> optionalPergunta = perguntaProdutoRepository.findByProduto(optionalProduto.get());
 
-                ProdutoDetalhadoResponse produto = new ProdutoDetalhadoResponse(optionalProduto.get(), optionalOpiniao.get(), optionalPergunta.get());
-                return ResponseEntity.ok().body(produto);
-            }else
-                result.addError(new FieldError("Produto", "Não encontrado", "Não conseguimos localizar o produto seleciondado"));
-
+            ProdutoDetalhadoResponse produto = new ProdutoDetalhadoResponse(optionalProduto.get(), optionalOpiniao, optionalPergunta);
+            return ResponseEntity.ok().body(produto);
         }
 
-        return ResponseEntity.badRequest().body(listarErros(result));
+        return ResponseEntity.badRequest().build();
     }
 }

@@ -50,10 +50,6 @@ public class Produto {
         this.categoria = categoria;
     }
 
-    public Usuario getDono() {
-        return dono;
-    }
-
     public long getId() {
         return id;
     }
@@ -70,16 +66,24 @@ public class Produto {
         return estoque;
     }
 
-    public List<Caracteristica> getCaracteristicas() {
-        return caracteristicas;
-    }
-
     public String getDescricao() {
         return descricao;
     }
 
+    public List<Caracteristica> getCaracteristicas() {
+        return caracteristicas;
+    }
+
     public Categoria getCategoria() {
         return categoria;
+    }
+
+    public Usuario getDono() {
+        return dono;
+    }
+
+    public Set<ImagemProduto> getImagens() {
+        return imagens;
     }
 
     public void associarImagens(Set<String> links){

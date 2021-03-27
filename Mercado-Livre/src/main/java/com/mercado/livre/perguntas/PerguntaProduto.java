@@ -22,6 +22,9 @@ public class PerguntaProduto {
     @ManyToOne(cascade = CascadeType.MERGE)
     private Produto produto;
 
+    public PerguntaProduto() {
+    }
+
     public PerguntaProduto(String titulo, LocalDateTime criacao, Usuario usuario, Produto produto) {
         this.titulo = titulo;
         this.criacao = criacao;

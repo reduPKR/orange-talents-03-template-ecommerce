@@ -6,6 +6,12 @@ public class OpniaoProdutoResponse {
     private String titulo;
    private String descricao;
 
+    public OpniaoProdutoResponse(OpiniaoProduto opiniaoProduto) {
+        this.nota = opiniaoProduto.getNota();
+        this.titulo = opiniaoProduto.getTitulo();
+        this.descricao = opiniaoProduto.getDescricao();
+    }
+
     public short getNota() {
         return nota;
     }
