@@ -9,6 +9,7 @@ import com.mercado.livre.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -56,27 +57,25 @@ public class ProdutoContoller {
         return ResponseEntity.badRequest().body(listarErros(result));
     }
 
-    @PostMapping("/{id}/imagens/{email}")
+    @PostMapping("/{id}/imagens")
     @Transactional
-    public ResponseEntity<?> cadastrarImegem(@Valid ImagensRequest imagens, @PathVariable("id") long id, @PathVariable("email") String login, BindingResult result){
+    public ResponseEntity<?> cadastrarImegem(@Valid ImagensRequest imagens,
+                                             @PathVariable("id") long id,
+                                             @AuthenticationPrincipal Usuario usuario,
+                                             BindingResult result){
         if(!result.hasErrors()){
-            Optional<Usuario> dono = usuarioRepository.findByLogin(login);
+            Produto produto = produtoRepository.findById(id).get();
 
-            if(dono.isPresent()){
-                Produto produto = produtoRepository.findById(id).get();
-                if(produto.getDono().getId() == dono.get().getId()){
-                    /*Vai simular o upload de imagem para um sistema externo*/
-                    Set<String> links = uploaderFake.send(imagens.getImagens());
-                    produto.associarImagens(links);
-                    produtoRepository.save(produto);
+            if(produto.getDono().getId().equals(usuario.getId())){
+                /*Vai simular o upload de imagem para um sistema externo*/
+                Set<String> links = uploaderFake.send(imagens.getImagens());
+                produto.associarImagens(links);
+                produtoRepository.save(produto);
 
-                    return ResponseEntity.ok().build();
-                }else{
-                    result.addError(new FieldError("Produtos", "cadastro de imagem", "Usuario não é o dono do produto."));
-                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(listarErros(result));
-                }
+                return ResponseEntity.ok().build();
             }else{
-                result.addError(new FieldError("Produtos", "cadastro de imagem", "Dono do produto nao encontrado."));
+                result.addError(new FieldError("Produtos", "cadastro de imagem", "Usuario não é o dono do produto."));
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(listarErros(result));
             }
         }
 
