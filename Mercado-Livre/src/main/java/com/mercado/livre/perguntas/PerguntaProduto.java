@@ -5,6 +5,7 @@ import com.mercado.livre.produto.Produto;
 import com.mercado.livre.usuario.Usuario;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -15,11 +16,18 @@ public class PerguntaProduto {
     @Column(nullable = false)
     private String titulo;
     @Column
-    private LocalTime criacao;
-    @ManyToOne(cascade = CascadeType.MERGE)
-    private Produto produto;
+    private LocalDateTime criacao;
     @ManyToOne(cascade = CascadeType.MERGE)
     private Usuario usuario;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Produto produto;
+
+    public PerguntaProduto(String titulo, LocalDateTime criacao, Usuario usuario, Produto produto) {
+        this.titulo = titulo;
+        this.criacao = criacao;
+        this.usuario = usuario;
+        this.produto = produto;
+    }
 
     public long getId() {
         return id;
@@ -29,7 +37,7 @@ public class PerguntaProduto {
         return titulo;
     }
 
-    public LocalTime getCriacao() {
+    public LocalDateTime getCriacao() {
         return criacao;
     }
 
