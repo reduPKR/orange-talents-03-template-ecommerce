@@ -2,6 +2,7 @@ package com.mercado.livre.produto;
 
 import com.mercado.livre.categoria.CategoriaRepository;
 import com.mercado.livre.exception.ErroResponse;
+import com.mercado.livre.produto.imagens.ImagemProduto;
 import com.mercado.livre.produto.imagens.ImagensRequest;
 import com.mercado.livre.produto.imagens.UploaderFake;
 import com.mercado.livre.usuario.Usuario;
@@ -13,14 +14,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -86,5 +85,11 @@ public class ProdutoContoller {
                 .stream()
                 .map(ErroResponse::new)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProdutoDetalhadoResponse> detalhes(@PathVariable long id){
+        Optional<ProdutoDetalhadoResponse> optionalProduto = produtoRepository.findDetailById(id);
+
     }
 }
