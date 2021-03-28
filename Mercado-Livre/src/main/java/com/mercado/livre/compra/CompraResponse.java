@@ -7,7 +7,7 @@ import java.net.URI;
 public class CompraResponse {
     private String url1;
     private URI url2;
-    private TransacaoResponse transacaoResponse;
+    private CompraResponseToTransacao transacaoResponse;
 
     public CompraResponse(Compra compra, UriComponentsBuilder uriComponentsBuilder) {
         montaUrl(compra, uriComponentsBuilder);
@@ -15,9 +15,8 @@ public class CompraResponse {
     }
 
     private void criarTransacao(Compra compra) {
-        transacaoResponse = new TransacaoResponse(
+        transacaoResponse = new CompraResponseToTransacao(
                 getStatusSucesso(),
-                compra.getId(),//Esta sendo o mesmo id para os dois
                 compra
         );
     }
@@ -52,7 +51,7 @@ public class CompraResponse {
         return url2;
     }
 
-    public TransacaoResponse getTransacaoResponse() {
+    public CompraResponseToTransacao getTransacaoResponse() {
         return transacaoResponse;
     }
 }
