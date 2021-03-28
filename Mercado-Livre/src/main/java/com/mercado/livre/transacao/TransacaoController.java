@@ -62,6 +62,35 @@ public class TransacaoController {
         return ResponseEntity.badRequest().body(listarErros);
     }
 
+    @PostMapping("/retorno-pagseguro/{id}")
+    @Transactional
+    public ResponseEntity<?> cadastroPagseguro(@PathVariable long id,
+                                            @RequestBody @Valid PagSeguroRequest pagSeguroRequest,
+                                            BindingResult result){
+        if(!result.hasErrors()){
+            Transacao transacao = pagSeguroRequest.converter(id, compraRepository);
+
+            if(transacao!=null){
+                transacaoRepository.save(transacao);
+
+                if(transacao.getStatus().equals("SUCESSO")){
+                    finalizarCompra(transacao);
+                    return ResponseEntity.ok().build();
+                }else{
+                    finalizarCompraErro(transacao);
+                }
+            }
+            result.addError(new FieldError("Transação", "Erro transacional", "Não foi possivel completar a transação"));
+        }
+
+        List<ErroResponse> listarErros = result.getFieldErrors()
+                .stream()
+                .map(ErroResponse::new)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.badRequest().body(listarErros);
+    }
+
     private void finalizarCompraErro(Transacao transacao) {
         //é ao contrario vai do vendedor para o cliente
         emailFake.send(
