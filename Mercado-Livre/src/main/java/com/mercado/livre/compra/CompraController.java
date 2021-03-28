@@ -7,10 +7,12 @@ import com.mercado.livre.produto.Produto;
 import com.mercado.livre.produto.ProdutoRepository;
 import com.mercado.livre.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -32,7 +34,9 @@ public class CompraController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<?> cadastrar(@RequestBody @Valid CompraRequest compraRequest, BindingResult result){
+    public ResponseEntity<?> cadastrar(@RequestBody @Valid CompraRequest compraRequest,
+                                       BindingResult result,
+                                       UriComponentsBuilder uriComponentsBuilder){
         if(!result.hasErrors()){
             Compra compra = compraRequest.converter(usuarioRepository, produtoRepository);
             if(ValidarCompra(compra)){
@@ -47,8 +51,8 @@ public class CompraController {
 
                 compraRepository.save(compra);
                 if (compra.getId() != 0) {
-                    compra.getRota();
-                    return ResponseEntity.ok().build();
+                    String rota = compra.getRota(uriComponentsBuilder);
+                    return ResponseEntity.status(HttpStatus.FOUND).body(rota);
                 }
             }
             result.addError(new FieldError("Compra", "Erro ao finalizar", "Ocorreu um erro ao finalizar a compra"));

@@ -24,7 +24,7 @@ public class Produto {
     @Column(nullable = false)
     private double preco;
     @Column(nullable = false)
-    private double estoque;
+    private int estoque;
     @Column(nullable = false)
     @Size(max = 1000)
     private String descricao;
@@ -40,7 +40,7 @@ public class Produto {
     public Produto() {
     }
 
-    public Produto(Usuario dono, String nome, @Size(min = 0) double preco, @Size(min = 0) double estoque, @Size(max = 1000) String descricao, Categoria categoria, List<Caracteristica> caracteristicas) {
+    public Produto(Usuario dono, String nome, @Size(min = 0) double preco, @Size(min = 0) int estoque, @Size(max = 1000) String descricao, Categoria categoria, List<Caracteristica> caracteristicas) {
         this.dono = dono;
         this.nome = nome;
         this.preco = preco;
