@@ -50,10 +50,13 @@ public class CompraController {
                         );
 
                 compraRepository.save(compra);
-                if (compra.getId() != 0) {
-                    String rota = compra.getRota(uriComponentsBuilder);
-                    return ResponseEntity.status(HttpStatus.FOUND).body(rota);
-                }
+                String rota = compra.getRota(uriComponentsBuilder);
+
+                return ResponseEntity
+                        .status(HttpStatus.FOUND)
+                        .location(rota)
+                        .body()
+
             }
             result.addError(new FieldError("Compra", "Erro ao finalizar", "Ocorreu um erro ao finalizar a compra"));
         }
