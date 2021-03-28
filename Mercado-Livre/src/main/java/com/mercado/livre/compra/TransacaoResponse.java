@@ -1,16 +1,16 @@
-package com.mercado.livre.transacao;
+package com.mercado.livre.compra;
 
 import com.mercado.livre.compra.Compra;
 
 public class TransacaoResponse {
     private String status;
     private long transacaoGatewayId;
-    private Compra compra;
+    private long compraId;
 
     public TransacaoResponse(String status, long transacaoGatewayId, Compra compra) {
         this.status = status;
         this.transacaoGatewayId = transacaoGatewayId;
-        this.compra = compra;
+        this.compraId = compra.getId();
     }
 
     public String getStatus() {
@@ -21,7 +21,7 @@ public class TransacaoResponse {
         return transacaoGatewayId;
     }
 
-    public Compra getCompra() {
-        return compra;
+    public long getCompra() {
+        return compraId;
     }
 }

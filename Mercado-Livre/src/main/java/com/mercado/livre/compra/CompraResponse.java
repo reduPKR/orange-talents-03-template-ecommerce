@@ -1,7 +1,5 @@
 package com.mercado.livre.compra;
 
-import com.mercado.livre.transacao.TransacaoResponse;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;

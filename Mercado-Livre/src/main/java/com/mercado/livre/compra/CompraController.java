@@ -3,10 +3,7 @@ package com.mercado.livre.compra;
 import com.mercado.livre.email.EmailFake;
 import com.mercado.livre.exception.ErroResponse;
 import com.mercado.livre.perguntas.PerguntaProduto;
-import com.mercado.livre.produto.Produto;
 import com.mercado.livre.produto.ProdutoRepository;
-import com.mercado.livre.transacao.RetornoTransacao;
-import com.mercado.livre.transacao.TransacaoResponse;
 import com.mercado.livre.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +15,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
