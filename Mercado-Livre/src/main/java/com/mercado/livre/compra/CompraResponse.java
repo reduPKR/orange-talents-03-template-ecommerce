@@ -6,7 +6,7 @@ import java.net.URI;
 
 public class CompraResponse {
     private String url1;
-    private URI url2;
+    private String url2;
     private CompraResponseToTransacao transacaoResponse;
 
     public CompraResponse(Compra compra, UriComponentsBuilder uriComponentsBuilder) {
@@ -40,15 +40,19 @@ public class CompraResponse {
         url1 = auxiliar.replace("{idCompra}",String.valueOf(compra.getId()));
 
         auxiliar = compra.getGateway().getUrl2();
-        url2 = uriComponentsBuilder.path(auxiliar).buildAndExpand(compra.getId()).toUri();
+        url2 = uriComponentsBuilder.path(auxiliar).buildAndExpand(compra.getId()).toString();
     }
 
     public String getUrl1() {
         return url1;
     }
 
-    public URI getUrl2() {
+    public String getUrl2() {
         return url2;
+    }
+
+    public String getUrl(){
+        return url1+url2;
     }
 
     public CompraResponseToTransacao getTransacaoResponse() {

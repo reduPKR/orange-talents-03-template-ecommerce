@@ -54,7 +54,7 @@ public class CompraController {
 
                 return ResponseEntity
                         .status(HttpStatus.FOUND)
-                        .location(compraResponse.getUrl2())
+                        .header(compraResponse.getUrl())
                         .body(compraResponse.getTransacaoResponse());
 
             }
