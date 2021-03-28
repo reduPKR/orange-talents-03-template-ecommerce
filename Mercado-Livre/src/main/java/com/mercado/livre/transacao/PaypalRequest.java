@@ -2,6 +2,7 @@ package com.mercado.livre.transacao;
 
 import com.mercado.livre.compra.Compra;
 import com.mercado.livre.compra.CompraRepository;
+import com.mercado.livre.validador.UniqueValue;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -14,6 +15,7 @@ public class PaypalRequest {
     @Max(1)
     private long status;
     @NotNull
+    @UniqueValue(domainClass = Transacao.class, fieldName = "status = 'SUCESSO' and compra_id", message = "Esta compra já foi finalizada com sucesso")
     private long compraId;
 
     public long getStatus() {
@@ -24,7 +26,8 @@ public class PaypalRequest {
         return compraId;
     }
 
-    public Transacao converter(long transacaoGatewayId, CompraRepository compraRepository) {
+    public Transacao converter(long transacaoGatewayId, CompraRepository compraRepository, TransacaoRepository transacaoRepository) {
+        Optional<Transacao> transacao = transacaoRepository.findSucesso(transacaoGatewayId);
         Optional<Compra> compra = compraRepository.findById(compraId);
         if(compra.isPresent())
             return new Transacao(

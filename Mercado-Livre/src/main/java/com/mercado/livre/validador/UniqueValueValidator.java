@@ -1,6 +1,7 @@
 package com.mercado.livre.validador;
 
 import com.mercado.livre.exception.ErroNoCadastroException;
+import org.springframework.util.Assert;
 
 import java.util.List;
 
@@ -30,8 +31,7 @@ public class UniqueValueValidator implements ConstraintValidator<UniqueValue, Ob
         query.setParameter("value", value);
         List<?> list = query.getResultList();
 
-        if(list.size() >=1)
-            throw new ErroNoCadastroException("Este "+value+" já foi cadastrado no "+klass.getSimpleName(), "Dado duplicado");
+        Assert.isTrue(list.size() <=1,"Este "+value+" já foi cadastrado no "+klass.getSimpleName());
 
         return list.isEmpty();
     }

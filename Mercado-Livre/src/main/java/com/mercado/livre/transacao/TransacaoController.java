@@ -39,7 +39,7 @@ public class TransacaoController {
                                             @RequestBody @Valid PaypalRequest paypalRequest,
                                             BindingResult result){
         if(!result.hasErrors()){
-            Transacao transacao = paypalRequest.converter(id, compraRepository);
+            Transacao transacao = paypalRequest.converter(id, compraRepository, transacaoRepository);
 
             if(transacao!=null){
                 transacaoRepository.save(transacao);
@@ -68,7 +68,7 @@ public class TransacaoController {
                                             @RequestBody @Valid PagSeguroRequest pagSeguroRequest,
                                             BindingResult result){
         if(!result.hasErrors()){
-            Transacao transacao = pagSeguroRequest.converter(id, compraRepository);
+            Transacao transacao = pagSeguroRequest.converter(id, compraRepository, transacaoRepository);
 
             if(transacao!=null){
                 transacaoRepository.save(transacao);
