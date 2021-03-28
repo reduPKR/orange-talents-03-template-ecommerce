@@ -1,24 +1,26 @@
-package com.mercado.livre.transacao;
+package com.mercado.livre.transacao.gateway;
 
 import com.mercado.livre.compra.Compra;
 import com.mercado.livre.compra.CompraRepository;
+import com.mercado.livre.transacao.StatusEnum;
+import com.mercado.livre.transacao.Transacao;
+import com.mercado.livre.transacao.TransacaoRepository;
 import com.mercado.livre.validador.UniqueValue;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class PaypalRequest {
-    @Min(0)
-    @Max(1)
-    private long status;
+public class PagSeguroRequest implements PagamentoRequest{
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
     @NotNull
     @UniqueValue(domainClass = Transacao.class, fieldName = "status = 'SUCESSO' and compra_id", message = "Esta compra já foi finalizada com sucesso")
-    private long compraId;
+    private long compraId;//Validar se já nao existe no banco de dados com sucesso
 
-    public long getStatus() {
+    public StatusEnum getStatus() {
         return status;
     }
 
@@ -27,11 +29,13 @@ public class PaypalRequest {
     }
 
     public Transacao converter(long transacaoGatewayId, CompraRepository compraRepository, TransacaoRepository transacaoRepository) {
+        //Tem que validar o transacaoGatewayId, esse id nao pode aparecer 2 vezes com sucesso.
         Optional<Transacao> transacao = transacaoRepository.findSucesso(transacaoGatewayId);
         Optional<Compra> compra = compraRepository.findById(compraId);
-        if(compra.isPresent())
+
+        if(compra.isPresent() && transacao.isEmpty())
             return new Transacao(
-                    status+"",
+                    status.toString(),
                     transacaoGatewayId,
                     LocalDateTime.now(),
                     compra.get()

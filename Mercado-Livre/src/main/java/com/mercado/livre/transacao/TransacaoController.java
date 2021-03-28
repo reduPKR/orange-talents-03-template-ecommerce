@@ -7,6 +7,8 @@ import com.mercado.livre.exception.ErroResponse;
 import com.mercado.livre.notaFiscal.NotaFiscalFake;
 import com.mercado.livre.perguntas.PerguntaProduto;
 import com.mercado.livre.ranking.RankingFake;
+import com.mercado.livre.transacao.gateway.PagSeguroRequest;
+import com.mercado.livre.transacao.gateway.PaypalRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
