@@ -1,6 +1,5 @@
 package com.mercado.livre.compra;
 
-import com.mercado.livre.perguntas.PerguntaProduto;
 import com.mercado.livre.produto.Produto;
 import com.mercado.livre.usuario.Usuario;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -67,14 +66,5 @@ public class Compra {
         produto.movimentarEstoque(-qtdeCompra);
     }
 
-    public String getRota(UriComponentsBuilder uriComponentsBuilder) {
-        String url1 = gateway.getUrl1();
-        url1 = url1.replace("{idCompra}",String.valueOf(this.id));
-
-        String url2 = gateway.getUrl2();
-        url2 = uriComponentsBuilder.path(url2).buildAndExpand(this.id).toString();
-
-        return url1+url2;
-    }
 }
 

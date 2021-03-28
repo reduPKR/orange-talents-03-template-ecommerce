@@ -5,6 +5,8 @@ import com.mercado.livre.exception.ErroResponse;
 import com.mercado.livre.perguntas.PerguntaProduto;
 import com.mercado.livre.produto.Produto;
 import com.mercado.livre.produto.ProdutoRepository;
+import com.mercado.livre.transacao.RetornoTransacao;
+import com.mercado.livre.transacao.TransacaoResponse;
 import com.mercado.livre.usuario.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,7 +40,7 @@ public class CompraController {
     @Transactional
     public ResponseEntity<?> cadastrar(@RequestBody @Valid CompraRequest compraRequest,
                                        BindingResult result,
-                                       UriComponentsBuilder uriComponentsBuilder){
+                                       UriComponentsBuilder uriComponentsBuilder) throws URISyntaxException {
         if(!result.hasErrors()){
             Compra compra = compraRequest.converter(usuarioRepository, produtoRepository);
             if(ValidarCompra(compra)){
@@ -50,12 +54,12 @@ public class CompraController {
                         );
 
                 compraRepository.save(compra);
-                String rota = compra.getRota(uriComponentsBuilder);
+                CompraResponse compraResponse = new CompraResponse(compra, uriComponentsBuilder);
 
                 return ResponseEntity
                         .status(HttpStatus.FOUND)
-                        .location(rota)
-                        .body()
+                        .location(compraResponse.getUrl2())
+                        .body(compraResponse.getTransacaoResponse());
 
             }
             result.addError(new FieldError("Compra", "Erro ao finalizar", "Ocorreu um erro ao finalizar a compra"));
@@ -67,6 +71,7 @@ public class CompraController {
                 .collect(Collectors.toList());
         return ResponseEntity.badRequest().body(erros);
     }
+
 
     private PerguntaProduto GerarEmailCompra(Compra compra) {
         return new PerguntaProduto(
