@@ -93,4 +93,8 @@ public class Produto {
 
         this.imagens.addAll(novasImagens);
     }
+
+    public void movimentarEstoque(int qtde) {
+        this.estoque += qtde;
+    }
 }

@@ -1,4 +1,4 @@
-package com.mercado.livre.perguntas.email;
+package com.mercado.livre.email;
 
 import com.mercado.livre.perguntas.PerguntaProduto;
 import org.springframework.stereotype.Component;

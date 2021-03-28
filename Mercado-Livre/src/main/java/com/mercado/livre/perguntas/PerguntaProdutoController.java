@@ -1,7 +1,7 @@
 package com.mercado.livre.perguntas;
 
 import com.mercado.livre.exception.ErroResponse;
-import com.mercado.livre.perguntas.email.EmailFake;
+import com.mercado.livre.email.EmailFake;
 import com.mercado.livre.produto.Produto;
 import com.mercado.livre.produto.ProdutoRepository;
 import com.mercado.livre.usuario.Usuario;

@@ -1,5 +1,6 @@
 package com.mercado.livre.compra;
 
+import com.mercado.livre.perguntas.PerguntaProduto;
 import com.mercado.livre.produto.Produto;
 import com.mercado.livre.usuario.Usuario;
 
@@ -17,10 +18,21 @@ public class Compra {
     private double valorAtual;
     @Enumerated(EnumType.STRING)
     private Gateway gateway = Gateway.PAYPAL;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Usuario comprador;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Produto produto;
+
+    public Compra() {
+    }
+
+    public Compra(@Min(1) int qtdeCompra,  Gateway gateway, Usuario comprador, Produto produto) {
+        this.qtdeCompra = qtdeCompra;
+        this.valorAtual = produto.getPreco();
+        this.gateway = gateway;
+        this.comprador = comprador;
+        this.produto = produto;
+    }
 
     public long getId() {
         return id;
@@ -44,6 +56,17 @@ public class Compra {
 
     public Produto getProduto() {
         return produto;
+    }
+
+    public boolean validarEstoque() {
+        return qtdeCompra <= produto.getEstoque();
+    }
+
+    public void abaterEstoque() {
+        produto.movimentarEstoque(-qtdeCompra);
+    }
+
+    public void getRota() {
     }
 }
 
